@@ -17,13 +17,11 @@ jobs:
 
       - name: Generate GKD json5
         run: |
-          cat > gkd.json5 <<'EOF'
-{
-  "name": "My GKD Rules",
-  "version": "${{ github.sha }}",
-  "rules": []
-}
-EOF
+          echo '{
+            "name": "My GKD Rules",
+            "version": "${{ github.sha }}",
+            "rules": []
+          }' > gkd.json5
 
       - name: Commit and Push
         run: |
