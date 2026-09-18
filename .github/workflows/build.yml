@@ -1,0 +1,44 @@
+name: Build GKD Subscription
+
+on:
+  # 手动触发（网页Actions页面点Run workflow）
+  workflow_dispatch:
+  # 定时：每天北京时间 02:00 运行
+  schedule:
+    - cron: '0 18 * * *'
+  # 提交代码到main分支时自动运行
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 这里写你的脚本：比如拉取源规则、合并、格式化输出 gkd.json5
+      - name: Generate GKD json5
+        run: |
+          # ========== 这里替换成你的生成逻辑 ==========
+          # 示例：如果你是用node处理json5，安装依赖
+          # npm install json5
+          # node build.js
+          # 下面仅演示创建一个简单的gkd.json5示例
+          cat > gkd.json5 <<'EOF'
+{
+  "name": "My GKD Rules",
+  "version": "${{ github.sha }}",
+  "rules": []
+}
+EOF
+
+      - name: Commit & Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add gkd.json5
+          git commit -m "Auto update GKD subscription" || echo "No changes to commit"
+          git push
